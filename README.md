@@ -1,14 +1,18 @@
 # Causal LLM Evaluator
 
-A FastAPI microservice that answers one question: **does changing my prompt actually cause better outputs, or did I just get lucky?**
+Every ML team argues about prompts. Almost none of them can prove who's right.
 
-Most LLM evaluation reports averages. You run prompt A ten times, prompt B ten times, and conclude "B is better" because it scored higher. But that's correlation — you can't tell if the prompt *caused* the improvement or if you got lucky with the sample.
+This evaluator borrows the randomised trial design from clinical medicine and applies it to LLM prompt engineering — so instead of "this one scored higher on my laptop," you get a p-value, a confidence interval, and an effect size that tells you whether the difference is real and whether it's worth shipping.
 
 This evaluator treats prompt A/B testing as a proper randomised experiment:
 
 - **p-value** — is the difference statistically real, or noise?
 - **Cohen's d** — is the effect size practically meaningful?
 - **95% bootstrap CI** — what's the plausible range of true effects?
+
+---
+
+![Experiment dashboard showing forest plot of ATE with 95% CI bars across four Primetag creator analysis prompt variants](demo/experiment_screenshot.png)
 
 ---
 
@@ -234,3 +238,35 @@ docker run -p 8000:8000 \
   -e GROQ_API_KEY=gsk_... \
   causal-llm-evaluator
 ```
+
+---
+
+## FAQ
+
+**Why use causal inference instead of just comparing averages?**
+
+Averages tell you what happened in your sample. Causal inference tells you whether the difference would hold in general. If you run prompt A on 10 inputs and prompt B on 10 different inputs, any difference in scores could be because A got easier inputs — not because A is actually better. Random assignment eliminates that confound, and the bootstrap CI quantifies how uncertain you should be about the result.
+
+**What's the difference between ATE, p-value, and Cohen's d — which one should I look at?**
+
+All three together. ATE is the raw score difference (e.g. +0.08 on a 0–1 scale). The p-value tells you whether that difference is likely to be noise — below 0.05 means it's probably real. Cohen's d tells you whether it's practically meaningful regardless of sample size — a result can be statistically significant but so small it doesn't matter. You want significant=true *and* Cohen's d > 0.5 before shipping a prompt change.
+
+**How is LLM-as-judge scoring reliable if the judge itself is an LLM?**
+
+The judge isn't rating the outputs in isolation — it's applying a fixed rubric consistently across all variants. Because the same judge model scores every output in the same experiment, any systematic bias cancels out when you compute the ATE. The risk is if the judge is inconsistent (high variance), which is why we use 30+ samples and bootstrap CI: variance in scoring shows up as wide confidence intervals, not false positives.
+
+**Why Welch's t-test instead of Student's t-test?**
+
+Student's t-test assumes both groups have equal variance. Prompt variants that produce more structured, predictable outputs will have lower score variance than open-ended variants — equal variance is almost never a safe assumption here. Welch's t-test handles unequal variances correctly with no real downside.
+
+**Can this compare models (e.g. Claude vs Llama) instead of just prompts?**
+
+Yes. Set the same prompt as both variants but different `provider`/`model` values per variant. The experiment runner handles mixed providers — one variant calls Anthropic, another calls Groq — and the causal estimation runs identically on the scores regardless of source.
+
+**Why bootstrap CI instead of a parametric confidence interval?**
+
+LLM judge scores are bounded (0–1) and often non-normal — parametric CIs assume normality. Bootstrap makes no distributional assumption: it resamples the actual observed scores 2000 times and reads the interval directly off the empirical distribution. More conservative, more honest.
+
+**What's the minimum number of samples needed for valid results?**
+
+30 per variant is the minimum (Central Limit Theorem kicks in). 50+ is recommended when score variance is high or effect sizes are expected to be small. If your CI is very wide, increase `n_samples` before drawing conclusions.
