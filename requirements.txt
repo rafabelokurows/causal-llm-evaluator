@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+anthropic>=0.52.0
+scipy
+numpy
+pandas
+rouge-score
+pydantic>=2.0
+streamlit
+matplotlib
+requests
+groq

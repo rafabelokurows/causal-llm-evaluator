@@ -1,0 +1,35 @@
+{
+  "variants": [
+    {
+      "id": "control_minimal",
+      "system_prompt": "You are a talent agency analyst. Analyze creator profiles for brand partnership potential.",
+      "user_template": "Analyze this creator profile:\n\n{input}"
+    },
+    {
+      "id": "structured_json",
+      "system_prompt": "You are a senior analyst at a creator talent agency. Evaluate creator profiles across four dimensions: (1) audience_fit — brand-audience alignment, (2) content_quality — consistency and production value, (3) brand_safety — reputational risk, (4) growth_signal — momentum and engagement trend. For each dimension provide a score 0-10 and a one-sentence rationale. Conclude with an investment recommendation: STRONG BUY / BUY / HOLD / PASS.",
+      "user_template": "Evaluate this creator profile across all four dimensions:\n\n{input}"
+    },
+    {
+      "id": "chain_of_thought",
+      "system_prompt": "You are a creator investment analyst. Before giving your final assessment, think step by step: first identify the creator's niche and audience demographics, then evaluate content consistency over the last 3 months, then check for any brand safety red flags, then assess growth trajectory. Only after working through each step give your final recommendation.",
+      "user_template": "Step-by-step creator analysis:\n\n{input}"
+    },
+    {
+      "id": "persona_talent_buyer",
+      "system_prompt": "You are the Head of Creator Partnerships at a luxury fashion brand with a €2M annual influencer budget. You are reviewing potential partners with extreme selectivity — you pass on 90% of creators. Your analysis must justify either a pass or a serious investment conversation. Cite specific numbers from the profile. Be direct and commercially minded.",
+      "user_template": "Partnership evaluation (budget: €2M):\n\n{input}"
+    }
+  ],
+  "test_inputs": [
+    "Name: Sofia Martins\nPlatform: Instagram + TikTok\nFollowers: 847K IG / 2.1M TikTok\nNiche: Sustainable fashion and slow living\nEngagement rate: 4.2% IG / 6.8% TikTok\nAudience: 78% female, 22-34 age bracket, 45% Spain/Portugal, 30% LATAM\nContent cadence: 4x/week IG, daily TikTok\nRecent brand deals: Reformation, Veja, Patagonia\nGrowth (90 days): +12% IG, +38% TikTok\nBrand safety flags: None\nAvg views last 5 TikToks: 890K, 1.2M, 440K, 670K, 1.05M",
+
+    "Name: Tiago Ferreira\nPlatform: YouTube + Instagram\nFollowers: 28K YT / 41K IG\nNiche: Personal finance for millennials in Portugal\nEngagement rate: 7.1% IG / avg 4200 views/video YT\nAudience: 62% male, 28-40 age bracket, 85% Portugal\nContent cadence: 2x/month YT, 3x/week IG\nRecent brand deals: None (no prior sponsorships)\nGrowth (90 days): +22% YT subscribers, +9% IG\nBrand safety flags: None\nAvg YT watch time: 68% retention on 12-min videos",
+
+    "Name: Ana Kovács\nPlatform: Instagram\nFollowers: 195K\nNiche: Fitness and wellness, female empowerment\nEngagement rate: 2.1%\nAudience: 91% female, 25-40, 55% Germany/Austria/Switzerland\nContent cadence: 5x/week\nRecent brand deals: MyProtein, Gymshark, HelloFresh\nGrowth (90 days): -3% (post-algorithm change)\nBrand safety flags: One controversy in 2024 (misrepresented supplement results, publicly addressed)\nAvg story views: 8,200 on 195K followers"
+  ],
+  "n_samples": 10,
+  "scorer": "llm_judge",
+  "model": "claude-opus-4-8",
+  "temperature": 0.7
+}

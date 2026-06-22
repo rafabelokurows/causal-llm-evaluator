@@ -1,0 +1,25 @@
+[project]
+name = "causal-llm-evaluator"
+version = "0.1.0"
+description = "Causal inference for LLM prompt A/B testing"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "anthropic>=0.52.0",
+    "scipy",
+    "numpy",
+    "pandas",
+    "rouge-score",
+    "pydantic>=2.0",
+    "streamlit",
+    "matplotlib",
+    "requests",
+    "groq",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "httpx",
+]
