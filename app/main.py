@@ -18,13 +18,13 @@ async def run(req: ExperimentRequest):
     exp_id = str(uuid.uuid4())[:8]
     control_id = req.variants[0].id
     logging.info(
-        "starting experiment=%s provider=%s model=%s variants=%s n_inputs=%d n_samples=%d",
+        "starting experiment=%s provider=%s model=%s variants=%s n_inputs=%d n_reps_per_variant=%d",
         exp_id,
         req.provider,
         req.model or "default",
         [v.id for v in req.variants],
         len(req.test_inputs),
-        req.n_samples,
+        req.n_reps_per_variant,
     )
 
     records = await run_experiment(req)
@@ -37,7 +37,7 @@ async def run(req: ExperimentRequest):
         experiment_id=exp_id,
         control_id=control_id,
         effects=effects,
-        n_per_variant=req.n_samples,
+        n_per_variant=req.n_reps_per_variant,
         scorer_used=req.scorer,
         winner=winner,
         interpretation=interpretation,

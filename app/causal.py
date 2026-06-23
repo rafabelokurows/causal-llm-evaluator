@@ -50,7 +50,7 @@ def interpret_results(effects: list[EffectEstimate], control_id: str) -> tuple[s
     if not significant:
         return None, (
             f"No statistically significant differences vs '{control_id}'. "
-            "Variants perform similarly, or increase n_samples (>=50 recommended)."
+            "Variants perform similarly, or increase n_reps_per_variant (>=50 recommended)."
         )
 
     winner = max(significant, key=lambda e: e.ate)

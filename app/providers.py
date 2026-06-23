@@ -68,6 +68,7 @@ def call_sync(
             max_tokens=max_tokens,
             system=system,
             messages=[{"role": "user", "content": user}],
+            # temperature omitted — deprecated in current Anthropic SDK
         )
         return resp.content[0].text
 

@@ -28,8 +28,8 @@
 
     "Name: Ana Kovács\nPlatform: Instagram\nFollowers: 195K\nNiche: Fitness and wellness, female empowerment\nEngagement rate: 2.1%\nAudience: 91% female, 25-40, 55% Germany/Austria/Switzerland\nContent cadence: 5x/week\nRecent brand deals: MyProtein, Gymshark, HelloFresh\nGrowth (90 days): -3% (post-algorithm change)\nBrand safety flags: One controversy in 2024 (misrepresented supplement results, publicly addressed)\nAvg story views: 8,200 on 195K followers"
   ],
-  "n_samples": 10,
+  "n_reps_per_variant": 10,
   "scorer": "llm_judge",
   "model": "claude-opus-4-8",
-  "temperature": 0.7
+  "temperature": 0.2
 }

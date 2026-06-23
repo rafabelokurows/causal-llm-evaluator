@@ -31,8 +31,11 @@ async def run_experiment(req: ExperimentRequest) -> list[dict]:
     model = req.model or default_model(req.provider)
     tasks = []
     for input_text in req.test_inputs:
-        for _ in range(req.n_samples):
-            variant = random.choice(req.variants)
+        # Balanced assignment: each variant gets equal reps per input
+        reps_per_variant = max(1, req.n_reps_per_variant // len(req.variants))
+        assignment = req.variants * reps_per_variant
+        random.shuffle(assignment)
+        for variant in assignment:
             tasks.append(call_llm(variant, input_text, req.provider, model, req.temperature))
     results = await asyncio.gather(*tasks)
     return list(results)

@@ -11,7 +11,7 @@ class PromptVariant(BaseModel):
 class ExperimentRequest(BaseModel):
     variants: list[PromptVariant]
     test_inputs: list[str]
-    n_samples: int = 30
+    n_reps_per_variant: int = 30
     scorer: str = "llm_judge"       # "rouge" | "llm_judge"
     provider: str = "anthropic"     # "anthropic" | "groq"
     model: Optional[str] = None     # None → provider default
